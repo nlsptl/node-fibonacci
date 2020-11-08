@@ -14,7 +14,7 @@ This Node.js Web application can perform operations such as,
 
 1. Performing Fibonacci for the number
 
-    Example:
+   Example:
 
     ```script
    /fibonacci?value=15
@@ -22,7 +22,7 @@ This Node.js Web application can perform operations such as,
     
  ### Step to create Dockerfile for this application.
  
-    Dockerfile:
+   Dockerfile:
 
     ```script
     FROM node:12                  // Image for node:12
@@ -50,7 +50,7 @@ $ docker push docker451001/nodejs-test
 ```
 Now, We are done with docker parts, Let's deploy it to kubernetes cluster -
 
-deployment-service-hpa.yaml
+   Deployment-service-hpa.yaml
 
 ```script
 ---
