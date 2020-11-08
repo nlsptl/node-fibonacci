@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: node-fibonacci
-        image: docker451001/node-fibonacci:1.0
+        image: docker451001/nodejs-test:latest
         ports:
         - containerPort: 8080
 
@@ -60,4 +60,4 @@ spec:
       name: memory
       target:
         type: AverageValue
-        averageValue: 100Mi
+        averageValue: 60Mi
