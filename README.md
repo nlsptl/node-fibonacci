@@ -129,4 +129,4 @@ Once you execute this file -
 ```script
 $ kubectl apply -f deployment-service-hpa.yaml
 ```
-You are set to use the application...!
+You are set to use the application....!
