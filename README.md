@@ -23,6 +23,7 @@ This Node.js Web application can perform operations such as,
  ### Step to create Dockerfile for this application.
  
     Dockerfile:
+
     ```script
     FROM node:12                  // Image for node:12
 
@@ -47,25 +48,87 @@ Once build is complete, push it to docker repo -
 ```script
 $ docker push docker451001/nodejs-test
 ```
-Now, We are done with docker parts, Let's see the deployment, service and Hpa files - 
+Now, We are done with docker parts, Let's deploy it to kubernetes cluster -
+
+deployment-service-hpa.yaml
+
 ```script
-$ Deployment.yaml
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-fibonacci
+  labels:
+    app: node-fibonacci
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: node-fibonacci
+  template:
+    metadata:
+      labels:
+        app: node-fibonacci
+    spec:
+      containers:
+      - name: node-fibonacci
+        image: docker451001/nodejs-test:latest
+        ports:
+        - containerPort: 8080
 
-$ Service.yaml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-fibonacci
+spec:
+  selector:
+    app: node-fibonacci
+  ports:
+  - name: example-port
+    protocol: TCP
+    port: 3000
+    targetPort: 8080
+  type: LoadBalancer
 
-$ Hpa.yaml
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: node-fibonacci
+spec:
+  maxReplicas: 10
+  minReplicas: 7
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: node-fibonacci
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: AverageValue
+        averageValue: 60Mi
+
 ```
 
-1) Deloyment.yaml file will create nodejs-test application ( which is hosted in Docker451001/nodejs-test repository ) with 10 replicas.
+This single file has following resource:
 
-2) Service.yaml file will expose the pods to port 3000 for external use.
+1) First part of this file which is Deloyment part will create nodejs-test application ( which is hosted in Docker451001/nodejs-test repository ) with 10 replicas.
 
-3) Hpa.yaml file will make sure to scale pods based on metrics define in file.
+2) Second part is Service part which will expose the pods to port 3000 for external use.
 
-I have created single file for all the three executions to overcome deploying these file again and again.
+3) Third part is Horizontal Pod Autoscaler (HPA) part which will make sure to scale pods based on metrics define in file.
+
+Once you execute this file - 
 ```script
-$ deployment-service-hpa.yaml
+$ kubectl apply -f deployment-service-hpa.yaml
 ```
-
-You are all set to use the application...!
-
+You are set to use the application...!
