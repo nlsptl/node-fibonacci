@@ -24,7 +24,6 @@ This Node.js Web application can perform operations such as,
  
    Dockerfile:
 
-    ```script
     FROM node:12                  // Image for node:12
 
     WORKDIR /usr/share/app        // Creating workdir
@@ -38,7 +37,6 @@ This Node.js Web application can perform operations such as,
     EXPOSE 8080                   // Exposing Conatainer to port 8080
 
     CMD ["node", "server.js"]     // Starting the application
-    ```
 
 After creating Dockerfile, build it - 
 ```script
